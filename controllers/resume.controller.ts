@@ -2,8 +2,12 @@ import express from 'express';
 import multer from 'multer';
 import pdfParse from 'pdf-parse';
 import { OpenAI } from 'openai';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
+let OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+let openai = new OpenAI({ apiKey: OPENAI_API_KEY as string });
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -13,6 +17,10 @@ export const uploadResume = [
         if (!req.file || !req.body.jobDescription) {
             res.status(400).send('No file uploaded or job description provided');
             return;
+        }
+        if (req.body.apiKey) {
+            OPENAI_API_KEY = req.body.apiKey;
+            openai = new OpenAI({ apiKey: OPENAI_API_KEY as string });
         }
         const dataBuffer = req.file.buffer;
         const data = await pdfParse(dataBuffer);
