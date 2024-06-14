@@ -19,7 +19,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
             .json({ success: false, message: "Authorization token not found" });
     }
     try {
-        console.log(process.env.JWT_SECRET_KEY)
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!);
         (req as any).user = decoded;
         next();
