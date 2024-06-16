@@ -31,3 +31,22 @@ export const getUserByEmail = async (req: express.Request, res: express.Response
     const user = await User.findOne({ email: req.params.email });
     res.json(user);
 };
+
+export const updateAiKeyUsage = async (req: express.Request, res: express.Response) => {
+    try {
+        const { userEmail } = req.body;
+        const user = await User.findOne({ email: userEmail });
+  
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        user.aiKeyUsage = Math.max(0, (user.aiKeyUsage || 0) - 1);
+        await user.save();
+
+        res.status(200).send('aiKeyUsage updated successfully');
+    } catch (error) {
+        console.error('Error updating aiKeyUsage:', error);
+        res.status(500).send('Internal server error');
+    }
+};

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', authMiddleware, userController.getUsers);
 router.post('/', userController.createUser);
+router.post('/updateAiKeyUsage', userController.updateAiKeyUsage);
 router.get('/:id', userController.getUser);
 router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
